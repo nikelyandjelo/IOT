@@ -24,25 +24,28 @@ def connect_mqtt(broker, port):
     return client
 
 
-def publish(client, topics, datasource, delay, batch_size):
+def publish(client, topic, datasource, delay, batch_size):
     datasource.startReading()
     while True:
         time.sleep(delay)
 
         for data, parking in datasource.read(batch_size):
-            msgs = [
-                AggregatedDataSchema().dumps(data),
-                ParkingSchema().dumps(parking)
-            ]
-
-            for topic, item in zip(topics, msgs):
-                result = client.publish(topic, item)
-
-                status = result[0]
-                if status == 0:
-                    pass
+            msgs = AggregatedDataSchema().dumps(data)
+            msgs2 = ParkingSchema().dumps(parking)
+            result = client.publish(topic, msgs)
+            status = result[0]
+            if status == 0:
+                pass
                     # print(f"Send `{msg}` to topic `{topic}`")
-                else:
+            else:
+                    print(f"Failed to send message to topic {topic}")
+            msgs2 = ParkingSchema().dumps(parking)
+            result = client.publish(topic, msgs2)
+            status = result[0]
+            if status == 0:
+                pass
+                    # print(f"Send `{msg}` to topic `{topic}`")
+            else:
                     print(f"Failed to send message to topic {topic}")
 
 
