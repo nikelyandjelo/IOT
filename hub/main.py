@@ -72,9 +72,10 @@ class MQTTClient:
     def start(self):
         self.client.loop_start()
 
+'''
     def emulate_requests(self):
         processed_data = {
-            "road_state": "Bad",
+            "road_state": "flat",
             "agent_data": {
                 "user_id" : 1,
                 "accelerometer": {"x": -17, "y": 4, "z": 16516},
@@ -87,7 +88,7 @@ class MQTTClient:
             # Publish the encoded payload
             self.client.publish(self.mqtt_topic, payload=json_string)
             time.sleep(5)
-
+'''
 
 # Initialize FastAPI app
 app = FastAPI()
@@ -112,4 +113,4 @@ mqtt_client.connect()
 mqtt_client.start()
 
 # Start MQTT request emulator
-mqtt_client.emulate_requests()
+#mqtt_client.emulate_requests()
